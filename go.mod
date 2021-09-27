@@ -1,4 +1,4 @@
-module nemesis.sh/go-khinsider
+module nemesis.sh/gokhi
 
 go 1.16
 

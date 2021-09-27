@@ -6,13 +6,13 @@ import (
 	"log"
 	"os"
 
-	"nemesis.sh/go-khinsider/khinsider"
+	"nemesis.sh/gokhi/scraper"
 )
 
 // FN to search for albums
 func search(query string) {
 	fmt.Printf("🔍 Query: %v \n", query)
-	links := khinsider.Search(query)
+	links := scraper.Search(query)
 	fmt.Println("-- -- -- -- -- -- -- --")
 	for i, l := range links {
 		fmt.Printf("[%d] ~+> %v \n", i, l)
@@ -24,7 +24,7 @@ func search(query string) {
 // FN to download a specific album
 func download(album string, downloadPath string) {
 	fmt.Printf("🔍 Album to download: %v \n", album)
-	khinsider.Download(album, downloadPath)
+	scraper.Download(album, downloadPath)
 	os.Exit(0)
 }
 
@@ -38,7 +38,7 @@ func flags() {
 	downloadPath := downloadCmd.String("download-path", "downloads", "Specify the download directory. [default: ./downloads]")
 
 	// Search SubCMD
-	query := searchCmd.String("query", "", "Specify the query to search through khinsider's albums.")
+	query := searchCmd.String("query", "", "Specify the query to search through scraper's albums.")
 
 	// check if enough arguments are passed
 	if len(os.Args) < 2 {
@@ -58,7 +58,6 @@ func flags() {
 
 	case "download":
 		downloadCmd.Parse(os.Args[2:])
-		fmt.Println(*album)
 		if len(*album) != 0 && len(*downloadPath) != 0 {
 			if _, err := os.Stat(*downloadPath); os.IsNotExist(err) {
 				err = os.Mkdir(*downloadPath, 0700)

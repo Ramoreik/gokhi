@@ -1,4 +1,4 @@
-package khinsider
+package scraper
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ const KhinsiderHost = "downloads.khinsider.com"
 const KhinsiderOSTUri = "game-soundtracks/album"
 const KhinsiderSearchUri = "search?search="
 
-var downloadDir string
+var Album, DownloadDir string
 
 func dlWorker(wg *sync.WaitGroup, downloadQueue chan string) {
 	defer wg.Done()
@@ -44,7 +44,7 @@ Searching an album page for all the song links.
 <- album name: string
 -> song link list: []string
 */
-func findSongLinks(album string) []string {
+func findSongLinks() []string {
 	var songs []string
 	c := khCrawler("a[href]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
@@ -56,7 +56,7 @@ func findSongLinks(album string) []string {
 	url := url.URL{
 		Scheme: "https",
 		Host:   KhinsiderHost,
-		Path:   "game-soundtracks/album/" + url.QueryEscape(album),
+		Path:   "game-soundtracks/album/" + url.QueryEscape(Album),
 	}
 
 	c.Visit(url.String())
@@ -89,7 +89,7 @@ the parent dir if needed.
 */
 func prepareDownload(u string) (string, error) {
 	var err error
-	dir := path.Join(downloadDir, strings.Split(u, "/")[4])
+	dir := path.Join(DownloadDir, strings.Split(u, "/")[4])
 	filename := strings.Split(u, "/")[6]
 	filepath := path.Join(dir, filename)
 	if _, e := os.Stat(dir); os.IsNotExist(e) {
@@ -132,10 +132,12 @@ Downloads a full album from khinsider.
 
 TODO: control over download directory and worker numbers.
 */
-func Download(album string, downloadPath string) {
-	downloadDir = downloadPath
+func Download(album string, downloadDir string) {
+	DownloadDir = downloadDir
+	Album = album
+
 	fmt.Println("🔍 Finding songs ...")
-	songUrls := findSongLinks(album)
+	songUrls := findSongLinks()
 	if len(songUrls) == 0 {
 		fmt.Println("❌ Could not find any songs for the specified album, does it exist ?")
 		os.Exit(1)
