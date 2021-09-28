@@ -14,19 +14,6 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-const LOGO = `
-      ___           ___           ___           ___                 
-     /\  \         /\  \         /\__\         /\__\          ___   
-    /::\  \       /::\  \       /:/  /        /:/  /         /\  \  
-   /:/\:\  \     /:/\:\  \     /:/__/        /:/__/          \:\  \ 
-  /:/  \:\  \   /:/  \:\  \   /::\__\____   /::\  \ ___      /::\__\
- /:/__/_\:\__\ /:/__/ \:\__\ /:/\:::::\__\ /:/\:\  /\__\  __/:/\/__/
- \:\  /\ \/__/ \:\  \ /:/  / \/_|:|~~|~    \/__\:\/:/  / /\/:/  /   
-  \:\ \:\__\    \:\  /:/  /     |:|  |          \::/  /  \::/__/    
-   \:\/:/  /     \:\/:/  /      |:|  |          /:/  /    \:\__\    
-    \::/  /       \::/  /       |:|  |         /:/  /      \/__/    
-     \/__/         \/__/         \|__|         \/__/                `
-
 const KhinsiderHost = "downloads.khinsider.com"
 const KhinsiderOSTUri = "game-soundtracks/album"
 
@@ -57,7 +44,11 @@ func khrawler(goquery string, cb colly.HTMLCallback) *colly.Collector {
 		colly.AllowedDomains(KhinsiderHost),
 		colly.Async(true),
 	)
-	Crawler.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 3})
+	err := Crawler.Limit(&colly.LimitRule{DomainGlob: "*", Parallelism: 3})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	Crawler.OnHTML(goquery, cb)
 	return Crawler
 }
@@ -82,7 +73,10 @@ func findSongLinks() []string {
 		Path:   "game-soundtracks/album/" + url.QueryEscape(Album),
 	}
 
-	c.Visit(url.String())
+	err := c.Visit(url.String())
+	if err != nil {
+		log.Println(err)
+	}
 	c.Wait()
 	return songs
 }
@@ -98,7 +92,10 @@ func findDownloadLinks(songUrls []string) []string {
 		downloadLinks = append(downloadLinks, e.Attr("src"))
 	})
 	for _, l := range songUrls {
-		c.Visit(l)
+		err := c.Visit(l)
+		if err != nil {
+			log.Prinln(err)
+		}
 	}
 	c.Wait()
 	return downloadLinks
