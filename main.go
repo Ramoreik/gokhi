@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"nemesis.sh/gokhi/scraper"
+	"github.com/Ramoreik/gokhi/scraper"
 )
 
 // FN to search for albums
