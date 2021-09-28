@@ -5,9 +5,20 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/Ramoreik/gokhi/scraper"
 )
+
+const LOGO = `
+	 ▄████ ▒█████  ██ ▄█▀██░ ██ ██▓
+	██▒ ▀█▒██▒  ██▒██▄█▒▓██░ ██▓██▒
+	██░▄▄▄▒██░  ██▓███▄░▒██▀▀██▒██▒
+	▓█  ██▒██   ██▓██ █▄░▓█ ░██░██░
+	▒▓███▀░ ████▓▒▒██▒ █░▓█▒░██░██░
+	 ░   ░░ ░ ░ ▒ ░ ░░ ░ ░  ░░ ░▒ ░
+	     ░    ░ ░ ░  ░   ░  ░  ░░  
+`
 
 // FN to search for albums
 func search(query string) {
@@ -42,7 +53,7 @@ func flags() {
 
 	// check if enough arguments are passed
 	if len(os.Args) < 2 {
-		fmt.Println("[!] Please specify the 'search' or 'download' subcommands.")
+		fmt.Println("❌ Please specify the 'search' or 'download' subcommands.")
 		os.Exit(1)
 	}
 
@@ -53,7 +64,7 @@ func flags() {
 		if len(*query) != 0 {
 			search(*query)
 		} else {
-			fmt.Println("[!] Please specify a string value for the 'query' parameter.")
+			fmt.Println("❌ Please specify a string value for the 'query' parameter.")
 			os.Exit(1)
 		}
 
@@ -68,17 +79,18 @@ func flags() {
 			}
 			download(*album, *downloadPath)
 		} else {
-			fmt.Println("[!] Please specify a string value for the 'album' and 'download-path' parameter.")
+			fmt.Println("❌ Please specify a string value for the 'album' and 'download-path' parameter.")
 			os.Exit(1)
 		}
 
 	default:
-		fmt.Println("[!] Expected 'search' or 'download' subcommands.")
+		fmt.Println("❌ Expected 'search' or 'download' subcommands.")
 		os.Exit(1)
 	}
 }
 
 // FN main
 func main() {
+	fmt.Printf("%v%v\n", LOGO, strings.Repeat("~", 50))
 	flags()
 }
