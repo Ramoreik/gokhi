@@ -92,6 +92,6 @@ func flags() {
 
 // FN main
 func main() {
-	fmt.Printf("%v%v\n", LOGO, strings.Repeat("~", 50))
+	fmt.Printf("%v%v\n", LOGO, strings.Repeat("-", 50))
 	flags()
 }
