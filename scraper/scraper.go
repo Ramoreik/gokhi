@@ -73,10 +73,7 @@ func findSongLinks() []string {
 		Path:   "game-soundtracks/album/" + url.QueryEscape(Album),
 	}
 
-	err := c.Visit(url.String())
-	if err != nil {
-		log.Println(err)
-	}
+	c.Visit(url.String())
 	c.Wait()
 	return songs
 }
