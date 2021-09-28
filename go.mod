@@ -1,4 +1,4 @@
-module nemesis.sh/gokhi
+module github.com/Ramoreik/gokhi
 
 go 1.16
 
