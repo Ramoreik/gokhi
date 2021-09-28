@@ -1,10 +1,10 @@
 # GOKHI
-GO Kingdom Hearts Insider web scraper.
-
-This project aims to automate the process of download OST from khinsider.
-From thinking of an OST to listening to it is only 2 commands away !
-
-Here is a little demo of how to install and download an album:
+GO Kingdom Hearts Insider web scraper.  
+  
+This project aims to automate the process of downloading OST from khinsider.  
+From thinking of an OST to listening to it is only 2 commands away !  
+  
+Here is a little demo of how to install and download an album:  
 ```bash
 # Install gokhi
 go get github.com/Ramoreik/gokhi
@@ -36,3 +36,9 @@ gokhi download -album '<chosen-album-here' -download-path /home/somedude/Music/
 ✅ Done, please check the specified download directory !
 
 ```
+  
+That's all, I don't think any other features need to be implemented really.  
+I did this only to learn Golang and play with some goroutines.  
+If you want to reuse or extend this projet, feel free to fork.  
+  
+
