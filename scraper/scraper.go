@@ -89,10 +89,7 @@ func findDownloadLinks(songUrls []string) []string {
 		downloadLinks = append(downloadLinks, e.Attr("src"))
 	})
 	for _, l := range songUrls {
-		err := c.Visit(l)
-		if err != nil {
-			log.Println(err)
-		}
+		c.Visit(l)
 	}
 	c.Wait()
 	return downloadLinks
