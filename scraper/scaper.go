@@ -16,10 +16,14 @@ import (
 
 const KhinsiderHost = "downloads.khinsider.com"
 const KhinsiderOSTUri = "game-soundtracks/album"
-const KhinsiderSearchUri = "search?search="
 
 var Album, DownloadDir string
 
+/*
+A download worker, it has a queue of urls to download,
+It is also in a waitGroup.
+<- *WaitGroup, downloadQueue
+*/
 func dlWorker(wg *sync.WaitGroup, downloadQueue chan string) {
 	defer wg.Done()
 	for u := range downloadQueue {
@@ -27,8 +31,14 @@ func dlWorker(wg *sync.WaitGroup, downloadQueue chan string) {
 	}
 }
 
-// Implement a singleton
-func khCrawler(goquery string, cb colly.HTMLCallback) *colly.Collector {
+/*
+Instantiates a colly instance with the given callback and goquery.
+Mostly exists to save a few lines.
+I should look into how colly can be managed, with a singleton maybe ?
+<- goquery, callback
+-> colly collector
+*/
+func khrawler(goquery string, cb colly.HTMLCallback) *colly.Collector {
 	// Initiate the collector
 	Crawler := colly.NewCollector(
 		colly.AllowedDomains(KhinsiderHost),
@@ -46,7 +56,7 @@ Searching an album page for all the song links.
 */
 func findSongLinks() []string {
 	var songs []string
-	c := khCrawler("a[href]", func(e *colly.HTMLElement) {
+	c := khrawler("a[href]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		if strings.Contains(link, ".mp3") {
 			songs = append(songs, e.Request.AbsoluteURL(link))
@@ -71,7 +81,7 @@ find for download links within a song's page.
 */
 func findDownloadLinks(songUrls []string) []string {
 	var downloadLinks []string
-	c := khCrawler("audio[src]", func(e *colly.HTMLElement) {
+	c := khrawler("audio[src]", func(e *colly.HTMLElement) {
 		downloadLinks = append(downloadLinks, e.Attr("src"))
 	})
 	for _, l := range songUrls {
@@ -171,7 +181,7 @@ Searches the site using the specified query.
 func Search(query string) []string {
 	var links []string
 
-	c := khCrawler("a[href]", func(e *colly.HTMLElement) {
+	c := khrawler("a[href]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		if strings.Contains(link, KhinsiderOSTUri) {
 			links = append(links, strings.Split(link, "/")[3])

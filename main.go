@@ -43,6 +43,7 @@ func flags() {
 	// check if enough arguments are passed
 	if len(os.Args) < 2 {
 		fmt.Println("[!] Please specify the 'search' or 'download' subcommands.")
+		os.Exit(1)
 	}
 
 	// subcommands handling
