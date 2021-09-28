@@ -94,7 +94,7 @@ func findDownloadLinks(songUrls []string) []string {
 	for _, l := range songUrls {
 		err := c.Visit(l)
 		if err != nil {
-			log.Prinln(err)
+			log.Println(err)
 		}
 	}
 	c.Wait()
